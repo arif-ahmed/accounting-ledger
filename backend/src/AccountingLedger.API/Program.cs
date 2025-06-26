@@ -1,5 +1,8 @@
+using AccountingLedger.Application;
 using AccountingLedger.Infrastructure.Data;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace AccountingLedger.API
 {
@@ -15,6 +18,15 @@ namespace AccountingLedger.API
 
             builder.Services.AddDbContext<LedgerDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            //builder.Services.AddMediatR(Assembly.Load("AccountingLedger.Application"));
+            //builder.Services.AddAutoMapper(Assembly.Load("AccountingLedger.Application"));
+            //builder.Services.AddValidatorsFromAssembly(Assembly.Load("AccountingLedger.Application"));
+
+            builder.Services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssembly(typeof(ApplicationAssemblyReference).Assembly);
+            });
 
             var app = builder.Build();
 
