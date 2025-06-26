@@ -14,4 +14,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AccountingLedger.Domain\AccountingLedger.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
