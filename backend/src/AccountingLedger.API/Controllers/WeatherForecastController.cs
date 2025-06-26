@@ -1,3 +1,4 @@
+using AccountingLedger.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +34,13 @@ namespace AccountingLedger.API.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] string query)
+        {
+            var result = await _mediator.Send(new DummyQuery { Query = query });
+            return Ok(result);
         }
     }
 }
