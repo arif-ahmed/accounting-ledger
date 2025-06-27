@@ -1,14 +1,16 @@
 ﻿
+using AccountingLedger.Infrastructure.Data;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace AccountingLedger.Application.Queries;
 
 public class GetAllAccountsQueryHandler : IRequestHandler<GetAllAccountsQuery, List<AccountDto>>
 {
-    // private readonly IAccountRepository _accountRepository;
-    public GetAllAccountsQueryHandler()
+    private readonly LedgerDbContext _context;
+    public GetAllAccountsQueryHandler(LedgerDbContext context)
     {
-        //_accountRepository = accountRepository;
+        _context = context;
     }
     public async Task<List<AccountDto>> Handle(GetAllAccountsQuery request, CancellationToken cancellationToken)
     {
@@ -19,6 +21,15 @@ public class GetAllAccountsQueryHandler : IRequestHandler<GetAllAccountsQuery, L
         //    Name = a.Name,
         //    Type = a.Type
         //}).ToList();
-        return new();
+
+        var accounts = await _context.Accounts.ToListAsync(); // Placeholder for actual query handling
+        var result = accounts.Select(acc => new AccountDto 
+        {
+            Id = acc.Id,
+            Name = acc.Name,
+            Type = acc.Type.ToString()
+        }).ToList();
+
+        return result;
     }
 }

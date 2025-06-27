@@ -1,4 +1,5 @@
 ﻿using AccountingLedger.Application.Commands;
+using AccountingLedger.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,10 +26,8 @@ namespace AccountingLedger.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            //var result = await _mediator.Send(new GetAllAccountsQuery());
-            //return Ok(result);
-            await Task.FromResult(0); // Placeholder for actual query handling
-            return Ok();
+            var result = await _mediator.Send(new GetAllAccountsQuery());
+            return Ok(result);
         }
     }
 }
