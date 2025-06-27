@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AccountingLedger.Application.Queries;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AccountingLedger.API.Controllers;
 
@@ -6,10 +8,17 @@ namespace AccountingLedger.API.Controllers;
 [ApiController]
 public class TrialBalanceController : ControllerBase
 {
+    private readonly IMediator _mediator;
+
+    public TrialBalanceController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        await Task.Delay(1000);
-        return Ok(new { Message = "Trial Balance retrieved successfully." });
+        var result = await _mediator.Send(new GetTrialBalanceQuery());
+        return Ok(result);
     }
 }

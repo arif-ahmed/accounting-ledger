@@ -7,4 +7,7 @@ public class JournalEntryLine
     public int AccountId { get; set; }
     public decimal Debit { get; set; }
     public decimal Credit { get; set; }
+
+    public virtual JournalEntry? JournalEntry { get; set; }
+    public virtual Account? Account { get; set; } 
 }

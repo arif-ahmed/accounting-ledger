@@ -37,7 +37,7 @@ namespace AccountingLedger.API
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<LedgerDbContext>();
-                context.Database.Migrate(); // Apply migrations
+                // context.Database.Migrate(); // Apply migrations
                 DbInitializer.Initialize(context); // Seed data
             }
 
