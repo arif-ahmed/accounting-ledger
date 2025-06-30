@@ -6,7 +6,7 @@ namespace AccountingLedger.Infrastructure.Repositories;
 
 public class Repository<T> : IRepository<T> where T : class
 {
-    private readonly LedgerDbContext _context;
+    protected readonly LedgerDbContext _context;
     private readonly DbSet<T> _dbSet;
 
     public Repository(LedgerDbContext context)

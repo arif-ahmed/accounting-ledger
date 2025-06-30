@@ -1,6 +1,8 @@
 using AccountingLedger.API.Utils;
 using AccountingLedger.Application;
+using AccountingLedger.Application.Interfaces;
 using AccountingLedger.Infrastructure.Data;
+using AccountingLedger.Infrastructure.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -24,6 +26,10 @@ namespace AccountingLedger.API
             //builder.Services.AddMediatR(Assembly.Load("AccountingLedger.Application"));
             //builder.Services.AddAutoMapper(Assembly.Load("AccountingLedger.Application"));
             //builder.Services.AddValidatorsFromAssembly(Assembly.Load("AccountingLedger.Application"));
+
+            builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+            builder.Services.AddTransient<IJournalEntryRepository, JournalEntryRepository>();
 
             builder.Services.AddMediatR(cfg =>
             {

@@ -1,4 +1,5 @@
 ﻿using AccountingLedger.Application.Commands;
+using AccountingLedger.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ public class JournalEntriesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var result = await _mediator.Send(new Application.Queries.GetAllJournalEntriesQuery());
+        var result = await _mediator.Send(new GetAllJournalEntriesQuery());
         return Ok(result);
     }
 
