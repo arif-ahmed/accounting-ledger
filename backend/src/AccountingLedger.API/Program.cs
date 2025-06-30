@@ -30,6 +30,7 @@ namespace AccountingLedger.API
             builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddTransient<IAccountRepository, AccountRepository>();
             builder.Services.AddTransient<IJournalEntryRepository, JournalEntryRepository>();
+            builder.Services.AddTransient<ITrialBalanceRepository, TrialBalanceRepository>();
 
             builder.Services.AddMediatR(cfg =>
             {
