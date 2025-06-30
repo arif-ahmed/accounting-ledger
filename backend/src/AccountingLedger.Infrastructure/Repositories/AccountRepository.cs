@@ -1,4 +1,5 @@
 ﻿using AccountingLedger.Application.Interfaces;
+using AccountingLedger.Application.Queries;
 using AccountingLedger.Domain.Entities;
 using AccountingLedger.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +12,11 @@ public class AccountRepository : Repository<Account>, IAccountRepository
     {
 
     }
-    public async Task<List<Account>> GetAccountsViaSPAsync()
+    public async Task<List<AccountDto>> GetAccountsViaSPAsync()
     {
-        return await _context.Accounts.FromSqlRaw("EXEC GetAccounts").ToListAsync();
+        var accounts = await _context.Accounts.FromSqlRaw("EXEC usp_GetAccounts").ToListAsync();
+        return accounts.Select(a => new AccountDto { Id = a.Id, Name = a.Name, Type = a.Type.ToString()  }).ToList();
+
     }
     public async Task<int> AddAccountViaSPAsync(Account account)
     {

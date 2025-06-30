@@ -11,7 +11,6 @@ public class GetAllAccountsQueryHandler : IRequestHandler<GetAllAccountsQuery, L
     }
     public async Task<List<AccountDto>> Handle(GetAllAccountsQuery request, CancellationToken cancellationToken)
     {
-        await _accountRepository.GetAccountsViaSPAsync();
-        return new List<AccountDto>();
+        return await _accountRepository.GetAccountsViaSPAsync();
     }
 }
