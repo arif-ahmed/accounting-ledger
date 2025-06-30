@@ -1,8 +1,10 @@
 ﻿using AccountingLedger.Application.Interfaces;
+using AccountingLedger.Application.Queries;
 using AccountingLedger.Domain.Entities;
 using AccountingLedger.Infrastructure.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace AccountingLedger.Infrastructure.Repositories;
 public class JournalEntryRepository : Repository<JournalEntry>, IJournalEntryRepository
@@ -34,11 +36,47 @@ public class JournalEntryRepository : Repository<JournalEntry>, IJournalEntryRep
         return journalEntryId;
     }
 
-    public async Task<List<JournalEntry>> GetJournalEntriesAsync()
+    public async Task<List<JournalEntryDto>> GetJournalEntriesAsync()
     {
-        return await _context.JournalEntries
-            .Include(j => j.Lines)
-            .ThenInclude(l => l.Account)
-            .ToListAsync();
+        var result = new List<JournalEntryDto>();
+
+        using var conn = _context.Database.GetDbConnection();
+        await conn.OpenAsync();
+
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = "usp_GetJournalEntries";
+        cmd.CommandType = CommandType.StoredProcedure;
+
+        using var reader = await cmd.ExecuteReaderAsync();
+
+        Dictionary<int, JournalEntryDto> journalMap = new();
+
+        while (await reader.ReadAsync())
+        {
+            int journalId = Convert.ToInt32(reader["JournalEntryId"]);
+
+            if (!journalMap.TryGetValue(journalId, out var journal))
+            {
+                journal = new JournalEntryDto
+                {
+                    Id = journalId,
+                    Date = Convert.ToDateTime(reader["Date"]),
+                    Description = reader["Description"].ToString() ?? "",
+                    Lines = new List<JournalEntryLineDto>()
+                };
+                journalMap[journalId] = journal;
+            }
+
+            journal.Lines.Add(new JournalEntryLineDto
+            {
+                AccountId = Convert.ToInt32(reader["AccountId"]),
+                AccountName = reader["AccountName"].ToString() ?? "",
+                Debit = Convert.ToDecimal(reader["Debit"]),
+                Credit = Convert.ToDecimal(reader["Credit"])
+            });
+        }
+
+        result = journalMap.Values.ToList();
+        return result;
     }
 }

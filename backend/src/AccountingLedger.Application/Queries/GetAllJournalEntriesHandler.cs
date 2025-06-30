@@ -1,16 +1,19 @@
-﻿using MediatR;
+﻿using AccountingLedger.Application.Interfaces;
+using MediatR;
 
 namespace AccountingLedger.Application.Queries;
 
 public class GetAllJournalEntriesHandler : IRequestHandler<GetAllJournalEntriesQuery, List<JournalEntryDto>>
 {
-    public GetAllJournalEntriesHandler()
+    private readonly IJournalEntryRepository _journalEntryRepository;
+    public GetAllJournalEntriesHandler(IJournalEntryRepository journalEntryRepository)
     {
-
+        _journalEntryRepository = journalEntryRepository;
     }
 
     public async Task<List<JournalEntryDto>> Handle(GetAllJournalEntriesQuery request, CancellationToken cancellationToken)
     {
-        return await Task.FromResult(new List<JournalEntryDto>()); // Placeholder for actual implementation
+        var result = await _journalEntryRepository.GetJournalEntriesAsync();
+        return result; 
     }
 }
