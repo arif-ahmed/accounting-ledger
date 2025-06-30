@@ -17,9 +17,8 @@ public class JournalEntriesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        // Placeholder for actual query handling
-        await Task.FromResult(0);
-        return Ok();
+        var result = await _mediator.Send(new Application.Queries.GetAllJournalEntriesQuery());
+        return Ok(result);
     }
 
     [HttpPost]
